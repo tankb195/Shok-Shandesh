@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>અવસાન નોંધ - સ્મશાનયાત્રા</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8e8d0 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section, .preview-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #8b4513;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #5d4037;
+            font-size: 17px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d7ccc8;
+            border-radius: 8px;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #8b4513;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .photo-upload {
+            border: 3px dashed #d7ccc8;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload:hover {
+            border-color: #8b4513;
+            background: #faf8f5;
+        }
+
+        .photo-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px auto;
+            display: none;
+            border-radius: 10px;
+        }
+
+        .photo-preview.show {
+            display: block;
+        }
+
+        /* Obituary Card Styles */
+        .card-container {
+            position: relative;
+            padding: 40px;
+            border-radius: 15px;
+            min-height: 800px;
+            transition: background 0.3s;
+        }
+
+        .bg-cream { background: linear-gradient(135deg, #faf8f5 0%, #f5f2eb 100%); }
+        .bg-floral { background: linear-gradient(135deg, #fff9f0 0%, #ffe8d6 100%), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><circle cx="50" cy="50" r="20" fill="%238b4513"/></svg>'); }
+        .bg-gradient { background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%); }
+        .bg-temple { background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%); }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #8b4513;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .photo-frame {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 5px solid #8b4513;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            background: #f5f5f5;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+
+        .card-content {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .info-row {
+            margin-bottom: 15px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #3e2723;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #5d4037;
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 20px;
+            color: #8b4513;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #d7ccc8;
+            padding-bottom: 5px;
+        }
+
+        .card-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #d7ccc8;
+        }
+
+        .footer-org {
+            font-size: 20px;
+            font-weight: 600;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        .footer-om {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6f00;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* Background Theme Selector */
+        .theme-selector {
+            margin: 20px 0;
+            padding: 15px;
+            background: #faf8f5;
+            border-radius: 10px;
+        }
+
+        .theme-selector h3 {
+            margin-bottom: 10px;
+            color: #5d4037;
+            font-size: 18px;
+        }
+
+        .theme-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .theme-btn {
+            padding: 12px;
+            border: 2px solid #d7ccc8;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .theme-btn.active {
+            background: #8b4513;
+            color: white;
+            border-color: #8b4513;
+        }
+
+        /* Copy Text Area */
+        .copy-section {
+            margin-top: 30px;
+        }
+
+        .copy-textarea {
+            width: 100%;
+            min-height: 300px;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            font-size: 15px;
+            padding: 15px;
+            border: 2px solid #d7ccc8;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: #8b4513;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-info {
+            background: #25d366;
+            color: white;
+        }
+
+        @media (max-width: 968px) {
+            .card-title {
+                font-size: 24px;
+            }
+            
+            .theme-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h1>અવસાન નોંધ બનાવો</h1>
+            
+            <form id="obituaryForm">
+                <div class="form-group">
+                    <label>ફોટા / ફોટોગ્રાફ એડ કરો</label>
+                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                        <img id="photoPreview" class="photo-preview" alt="Preview">
+                        <p id="uploadText">📷 ફોટા અપલોડ કરવા અહીં ક્લિક કરો</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>અવસાન તારીખ</label>
+                    <input type="date" id="deathDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>નામ</label>
+                    <input type="text" id="name" placeholder="સંપૂર્ણ નામ" required>
+                </div>
+
+                <div class="form-group">
+                    <label>ઉમર</label>
+                    <input type="number" id="age" placeholder="વર્ષ" required>
+                </div>
+
+                <div class="form-group">
+                    <label>મૂળ ગામ</label>
+                    <input type="text" id="village" placeholder="મૂળ ગામનું નામ" required>
+                </div>
+
+                <div class="form-group">
+                    <label>હાલે</label>
+                    <input type="text" id="currentPlace" placeholder="વર્તમાન સ્થળ" required>
+                </div>
+
+                <div class="form-group">
+                    <label>સરનામું</label>
+                    <textarea id="address" placeholder="સંપૂર્ણ સરનામું" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>પારિવારિક માહિતી</label>
+                    <textarea id="family" placeholder="પરિવારજનોના નામ" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>સદ્દગતની સ્મશાનયાત્રા</label>
+                    <textarea id="funeral" placeholder="સમય, તારીખ અને સ્થળની વિગતો" required></textarea>
+                </div>
+            </form>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h1>કાર્ડ પ્રીવ્યુ</h1>
+            
+            <!-- Background Theme Selector -->
+            <div class="theme-selector">
+                <h3>બેકગ્રાઉન્ડ થીમ પસંદ કરો</h3>
+                <div class="theme-buttons">
+                    <button class="theme-btn active" onclick="changeTheme('bg-cream')">સાદું ક્રીમ</button>
+                    <button class="theme-btn" onclick="changeTheme('bg-floral')">ફૂલોની પેટર્ન</button>
+                    <button class="theme-btn" onclick="changeTheme('bg-gradient')">ગ્રેડિએન્ટ</button>
+                    <button class="theme-btn" onclick="changeTheme('bg-temple')">મંદિર પેટર્ન</button>
+                </div>
+            </div>
+
+            <!-- Obituary Card -->
+            <div id="cardContainer" class="card-container bg-cream">
+                <div class="card-header">
+                    <div class="card-title">અવસાન નોંધ - સ્મશાનયાત્રા</div>
+                    
+                    <div class="photo-frame">
+                        <img id="cardPhoto" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Crect fill='%23f5f5f5' width='220' height='220'/%3E%3Ctext x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='%23999'%3Eફોટા%3C/text%3E%3C/svg%3E" alt="Photo">
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <div class="info-row">
+                        <span class="info-label">અવસાન તારીખ :</span> 
+                        <span id="displayDate">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">નામ :</span> 
+                        <span id="displayName">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">ઉમર :</span> 
+                        <span id="displayAge">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">મૂળ ગામ :</span> 
+                        <span id="displayVillage">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">હાલે :</span> 
+                        <span id="displayPlace">-</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">સરનામું :</span> 
+                        <span id="displayAddress">-</span>
+                    </div>
+
+                    <div class="section-title">પારિવારિક માહિતી :</div>
+                    <div class="info-row" id="displayFamily" style="white-space: pre-line;">-</div>
+
+                    <div class="section-title">સદ્દગતની સ્મશાનયાત્રા :</div>
+                    <div class="info-row" id="displayFuneral" style="white-space: pre-line;">-</div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="footer-org">શ્રી ક્ચ્છ ગુર્જર ક્ષત્રિય સમાજ - માધાપર</div>
+                    <div class="footer-om">🙏ૐ શાંતિ શાંતિ શાંતિ🙏</div>
+                </div>
+            </div>
+
+            <!-- Copy Text Section -->
+            <div class="copy-section">
+                <h3 style="margin-bottom: 10px; color: #5d4037;">WhatsApp માટે ટેક્સ્ટ</h3>
+                <textarea id="copyText" class="copy-textarea" readonly></textarea>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="copyText()">📋 ટેક્સ્ટ કોપી કરો</button>
+                    <button class="btn btn-success" onclick="downloadImage()">📥 ઇમેજ ડાઉનલોડ કરો</button>
+                    <button class="btn btn-info" onclick="shareWhatsApp()">💬 WhatsApp પર શેર કરો</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script>
+        // Photo upload handling
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const cardPhoto = document.getElementById('cardPhoto');
+        const uploadText = document.getElementById('uploadText');
+        let uploadedPhoto = null;
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedPhoto = event.target.result;
+                    photoPreview.src = uploadedPhoto;
+                    photoPreview.classList.add('show');
+                    cardPhoto.src = uploadedPhoto;
+                    uploadText.textContent = '✓ ફોટા અપલોડ થયો';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Real-time form updates
+        const formFields = [
+            { inputId: 'deathDate', displayId: 'displayDate' },
+            { inputId: 'name', displayId: 'displayName' },
+            { inputId: 'age', displayId: 'displayAge' },
+            { inputId: 'village', displayId: 'displayVillage' },
+            { inputId: 'currentPlace', displayId: 'displayPlace' },
+            { inputId: 'address', displayId: 'displayAddress' },
+            { inputId: 'family', displayId: 'displayFamily' },
+            { inputId: 'funeral', displayId: 'displayFuneral' }
+        ];
+
+        formFields.forEach(field => {
+            document.getElementById(field.inputId).addEventListener('input', updateCard);
+        });
+
+        function updateCard() {
+            formFields.forEach(field => {
+                const value = document.getElementById(field.inputId).value || '-';
+                document.getElementById(field.displayId).textContent = value;
+            });
+            updateCopyText();
+        }
+
+        // Update copyable text
+        function updateCopyText() {
+            const text = `અવસાન નોંધ - સ્મશાનયાત્રા
+
+અવસાન તારીખ - ${document.getElementById('deathDate').value || '-'}
+નામ - ${document.getElementById('name').value || '-'}
+ઉમર - ${document.getElementById('age').value || '-'}
+મૂળ ગામ - ${document.getElementById('village').value || '-'}
+હાલે - ${document.getElementById('currentPlace').value || '-'}
+સરનામું - ${document.getElementById('address').value || '-'}
+
+પારિવારિક માહિતી -
+${document.getElementById('family').value || '-'}
+
+સદ્દગતની સ્મશાનયાત્રા :-
+${document.getElementById('funeral').value || '-'}
+
+શ્રી ક્ચ્છ ગુર્જર ક્ષત્રિય સમાજ - માધાપર
+🙏ૐ શાંતિ શાંતિ શાંતિ🙏`;
+
+            document.getElementById('copyText').value = text;
+        }
+
+        // Background theme change
+        function changeTheme(themeClass) {
+            const card = document.getElementById('cardContainer');
+            card.className = 'card-container ' + themeClass;
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Copy text to clipboard
+        function copyText() {
+            const copyTextArea = document.getElementById('copyText');
+            copyTextArea.select();
+            document.execCommand('copy');
+            alert('✓ ટેક્સ્ટ કોપી થયો!');
+        }
+
+        // Download card as image
+        function downloadImage() {
+            const card = document.getElementById('cardContainer');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = card.offsetWidth * 2;
+            canvas.height = card.offsetHeight * 2;
+            
+            // Scale for better quality
+            ctx.scale(2, 2);
+            
+            // Draw background
+            const bgClass = card.className.split(' ')[1];
+            if (bgClass === 'bg-cream') {
+                ctx.fillStyle = '#faf8f5';
+            } else if (bgClass === 'bg-floral') {
+                ctx.fillStyle = '#fff9f0';
+            } else if (bgClass === 'bg-gradient') {
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#f5f5f5');
+                gradient.addColorStop(1, '#ffffff');
+                ctx.fillStyle = gradient;
+            } else {
+                ctx.fillStyle = '#fff5e6';
+            }
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw content (simplified version)
+            ctx.fillStyle = '#8b4513';
+            ctx.font = 'bold 32px Noto Sans Gujarati';
+            ctx.textAlign = 'center';
+            ctx.fillText('અવસાન નોંધ - સ્મશાનયાત્રા', canvas.width / 4, 60);
+            
+            // Draw photo if available
+            if (uploadedPhoto) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.roundRect(canvas.width / 4 - 110, 100, 220, 220, 15);
+                    ctx.clip();
+                    ctx.drawImage(img, canvas.width / 4 - 110, 100, 220, 220);
+                    ctx.restore();
+                    
+                    completeImageGeneration();
+                };
+                img.src = uploadedPhoto;
+            } else {
+                completeImageGeneration();
+            }
+            
+            function completeImageGeneration() {
+                // Draw text content
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.fillRect(40, 360, canvas.width / 2 - 80, canvas.height / 2 - 460);
+                
+                ctx.fillStyle = '#3e2723';
+                ctx.font = '18px Noto Sans Gujarati';
+                ctx.textAlign = 'left';
+                let y = 400;
+                
+                const lines = [
+                    `અવસાન તારીખ : ${document.getElementById('deathDate').value || '-'}`,
+                    `નામ : ${document.getElementById('name').value || '-'}`,
+                    `ઉમર : ${document.getElementById('age').value || '-'}`,
+                    `મૂળ ગામ : ${document.getElementById('village').value || '-'}`,
+                    `હાલે : ${document.getElementById('currentPlace').value || '-'}`,
+                    `સરનામું : ${document.getElementById('address').value || '-'}`
+                ];
+                
+                lines.forEach(line => {
+                    ctx.fillText(line, 60, y);
+                    y += 30;
+                });
+                
+                // Footer
+                y = canvas.height / 2 - 80;
+                ctx.fillStyle = '#8b4513';
+                ctx.font = 'bold 20px Noto Sans Gujarati';
+                ctx.textAlign = 'center';
+                ctx.fillText('શ્રી ક્ચ્છ ગુર્જર ક્ષત્રિય સમાજ - માધાપર', canvas.width / 4, y);
+                
+                ctx.fillStyle = '#ff6f00';
+                ctx.font = 'bold 24px Noto Sans Gujarati';
+                ctx.fillText('🙏ૐ શાંતિ શાંતિ શાંતિ🙏', canvas.width / 4, y + 40);
+                
+                // Download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'અવસાન-નોંધ.png';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            }
+        }
+
+        // Share on WhatsApp
+        function shareWhatsApp() {
+            const text = document.getElementById('copyText').value;
+            const encodedText = encodeURIComponent(text);
+            const url = `https://wa.me/?text=${encodedText}`;
+            window.open(url, '_blank');
+        }
+
+        // Initialize
+        updateCopyText();
+    </script>
+</body>
+</html>
